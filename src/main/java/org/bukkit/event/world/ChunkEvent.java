@@ -8,8 +8,8 @@ import org.bukkit.Chunk;
 public class ChunkEvent extends WorldEvent {
     protected Chunk chunk;
 
-    protected ChunkEvent(Type type, Chunk chunk) {
-        super(type, chunk.getWorld());
+    protected ChunkEvent(Chunk chunk) {
+        super(chunk.getWorld());
         this.chunk = chunk;
     }
 

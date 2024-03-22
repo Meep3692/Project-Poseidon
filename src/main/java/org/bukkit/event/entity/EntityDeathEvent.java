@@ -12,7 +12,7 @@ public class EntityDeathEvent extends EntityEvent {
     private List<ItemStack> drops;
 
     public EntityDeathEvent(final Entity what, final List<ItemStack> drops) {
-        super(Type.ENTITY_DEATH, what);
+        super(what);
         this.drops = drops;
     }
 

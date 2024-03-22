@@ -11,7 +11,7 @@ public class EntityDamageByEntityEvent extends EntityDamageEvent implements Canc
     private Entity damager;
 
     public EntityDamageByEntityEvent(Entity damager, Entity damagee, DamageCause cause, int damage) {
-        super(Type.ENTITY_DAMAGE, damagee, cause, damage);
+        super(damagee, cause, damage);
         this.damager = damager;
     }
 

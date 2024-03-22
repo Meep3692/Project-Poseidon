@@ -12,7 +12,7 @@ public class PlayerKickEvent extends PlayerEvent implements Cancellable {
     private Boolean cancel;
 
     public PlayerKickEvent(Player playerKicked, String kickReason, String leaveMessage) {
-        super(Type.PLAYER_KICK, playerKicked);
+        super(playerKicked);
         this.kickReason = kickReason;
         this.leaveMessage = leaveMessage;
         this.cancel = false;

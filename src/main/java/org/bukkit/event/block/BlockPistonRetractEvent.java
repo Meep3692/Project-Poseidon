@@ -5,7 +5,7 @@ import org.bukkit.block.Block;
 
 public class BlockPistonRetractEvent extends BlockPistonEvent {
     public BlockPistonRetractEvent(Block block) {
-        super(Type.BLOCK_PISTON_RETRACT, block);
+        super(block);
     }
 
     /**

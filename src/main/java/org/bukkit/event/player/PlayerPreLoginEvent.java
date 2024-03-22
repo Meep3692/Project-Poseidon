@@ -18,7 +18,7 @@ public class PlayerPreLoginEvent extends Event {
     private LoginProcessHandler loginProcessHandler; // Project Poseidon
 
     public PlayerPreLoginEvent(String name, InetAddress ipAddress, LoginProcessHandler loginProcessHandler) {
-        super(Type.PLAYER_PRELOGIN);
+        super();
         this.loginProcessHandler = loginProcessHandler;
         this.result = Result.ALLOWED;
         this.message = "";

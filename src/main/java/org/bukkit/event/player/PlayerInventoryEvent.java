@@ -10,7 +10,7 @@ public class PlayerInventoryEvent extends PlayerEvent {
     protected Inventory inventory;
 
     public PlayerInventoryEvent(final Player player, final Inventory inventory) {
-        super(Type.PLAYER_INVENTORY, player);
+        super(player);
         this.inventory = inventory;
     }
 

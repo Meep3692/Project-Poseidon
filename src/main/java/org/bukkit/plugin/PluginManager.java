@@ -103,6 +103,7 @@ public interface PluginManager {
      * @param priority Priority of this event
      * @param plugin Plugin to register
      */
+    @Deprecated
     public void registerEvent(Event.Type type, Listener listener, Priority priority, Plugin plugin);
 
     /**
@@ -114,6 +115,7 @@ public interface PluginManager {
      * @param priority Priority of this event
      * @param plugin Plugin to register
      */
+    @Deprecated
     public void registerEvent(Event.Type type, Listener listener, EventExecutor executor, Priority priority, Plugin plugin);
 
     /**

@@ -12,7 +12,7 @@ public class PaintingBreakEvent extends PaintingEvent implements Cancellable {
     private RemoveCause cause;
 
     public PaintingBreakEvent(final Painting painting, RemoveCause cause) {
-        super(Type.PAINTING_BREAK, painting);
+        super(painting);
         this.cause = cause;
     }
 

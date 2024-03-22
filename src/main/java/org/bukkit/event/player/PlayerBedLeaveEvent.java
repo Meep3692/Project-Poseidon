@@ -11,7 +11,7 @@ public class PlayerBedLeaveEvent extends PlayerEvent {
     private Block bed;
 
     public PlayerBedLeaveEvent(Player who, Block bed) {
-        super(Type.PLAYER_BED_LEAVE, who);
+        super(who);
         this.bed = bed;
     }
 

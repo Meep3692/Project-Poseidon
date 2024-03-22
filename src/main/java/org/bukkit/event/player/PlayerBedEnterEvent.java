@@ -13,7 +13,7 @@ public class PlayerBedEnterEvent extends PlayerEvent implements Cancellable {
     private Block bed;
 
     public PlayerBedEnterEvent(Player who, Block bed) {
-        super(Type.PLAYER_BED_ENTER, who);
+        super(who);
         this.bed = bed;
     }
 

@@ -16,15 +16,15 @@ public class PlayerLoginEvent extends PlayerEvent {
     private InetAddress localAddress;
 
     public PlayerLoginEvent(final Player player, final NetLoginHandler netLoginHandler) {
-        super(Type.PLAYER_LOGIN, player);
+        super(player);
         this.playerAddress = ((InetSocketAddress) netLoginHandler.networkManager.getSocketAddress()).getAddress();
         this.localAddress = netLoginHandler.networkManager.socket.getLocalAddress();
         this.result = Result.ALLOWED;
         this.message = "";
     }
 
-    public PlayerLoginEvent(final Type type, final Player player, final Result result, final String message) {
-        super(type, player);
+    public PlayerLoginEvent(final Player player, final Result result, final String message) {
+        super(player);
         this.result = result;
         this.message = message;
     }

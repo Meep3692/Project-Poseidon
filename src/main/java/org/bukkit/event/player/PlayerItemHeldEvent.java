@@ -10,7 +10,7 @@ public class PlayerItemHeldEvent extends PlayerEvent {
     private int current;
 
     public PlayerItemHeldEvent(final Player player, final int previous, final int current) {
-        super(Type.PLAYER_ITEM_HELD, player);
+        super(player);
         this.previous = previous;
         this.current = current;
     }

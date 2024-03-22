@@ -33,7 +33,7 @@ public interface PluginLoader {
      * @param plugin plugin
      * @return Map for all the events in the class
      */
-    public Map<Class<? extends Event>, Set<RegisteredListener>> createRegisteredListeners(@NotNull Listener listener, @NotNull final Plugin plugin);
+    public Set<RegisteredListener> createRegisteredListeners(@NotNull Listener listener, @NotNull final Plugin plugin);
     // Project Poseidon End
 
     /**
@@ -51,14 +51,6 @@ public interface PluginLoader {
      * Returns a list of all filename filters expected by this PluginLoader
      */
     public Pattern[] getPluginFileFilters();
-
-    /**
-     * Creates and returns an event executor
-     *
-     * @param type Type of the event executor to create
-     * @param listener the object that will handle the eventual call back
-     */
-    public EventExecutor createExecutor(Event.Type type, Listener listener);
 
     /**
      * Enables the specified plugin

@@ -15,7 +15,7 @@ public class PortalCreateEvent extends WorldEvent implements Cancellable {
     private ArrayList<Block> blocks = new ArrayList<Block>();
 
     public PortalCreateEvent(final Collection<Block> blocks, final World world) {
-        super(Type.PORTAL_CREATE, world);
+        super(world);
         this.blocks.addAll(blocks);
     }
 

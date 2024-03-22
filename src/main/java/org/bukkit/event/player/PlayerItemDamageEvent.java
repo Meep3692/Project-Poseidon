@@ -15,7 +15,7 @@ public class PlayerItemDamageEvent extends PlayerEvent implements Cancellable {
     private boolean cancelled = false;
 
     public PlayerItemDamageEvent(Player player, ItemStack what, int damage) {
-        super(Type.PLAYER_ITEM_DAMAGE, player);
+        super(player);
         this.item = what;
         this.damage = damage;
     }

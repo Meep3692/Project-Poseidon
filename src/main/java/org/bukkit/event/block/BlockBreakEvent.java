@@ -19,7 +19,7 @@ public class BlockBreakEvent extends BlockEvent implements Cancellable {
     private boolean cancel;
 
     public BlockBreakEvent(final Block theBlock, Player player) {
-        super(Type.BLOCK_BREAK, theBlock);
+        super(theBlock);
         this.player = player;
         this.cancel = false;
     }

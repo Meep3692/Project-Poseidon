@@ -12,7 +12,7 @@ public class EntityPortalEnterEvent extends EntityEvent {
     private Location location;
 
     public EntityPortalEnterEvent(Entity entity, Location location) {
-        super(Type.ENTITY_PORTAL_ENTER, entity);
+        super(entity);
         this.location = location;
     }
 

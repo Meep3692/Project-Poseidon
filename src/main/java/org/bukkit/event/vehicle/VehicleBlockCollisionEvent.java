@@ -10,7 +10,7 @@ public class VehicleBlockCollisionEvent extends VehicleCollisionEvent {
     private Block block;
 
     public VehicleBlockCollisionEvent(Vehicle vehicle, Block block) {
-        super(Type.VEHICLE_COLLISION_BLOCK, vehicle);
+        super(vehicle);
         this.block = block;
     }
 

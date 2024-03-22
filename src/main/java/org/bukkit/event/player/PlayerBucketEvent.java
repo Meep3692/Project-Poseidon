@@ -15,8 +15,8 @@ public abstract class PlayerBucketEvent extends PlayerEvent implements Cancellab
     private BlockFace blockFace;
     private Material bucket;
 
-    public PlayerBucketEvent(Type type, Player who, Block blockClicked, BlockFace blockFace, Material bucket, ItemStack itemInHand) {
-        super(type, who);
+    public PlayerBucketEvent(Player who, Block blockClicked, BlockFace blockFace, Material bucket, ItemStack itemInHand) {
+        super(who);
         this.blockClicked = blockClicked;
         this.blockFace = blockFace;
         this.itemStack = itemInHand;

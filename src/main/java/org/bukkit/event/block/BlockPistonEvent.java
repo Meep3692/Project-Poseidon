@@ -9,8 +9,8 @@ import org.bukkit.material.PistonBaseMaterial;
 public abstract class BlockPistonEvent extends BlockEvent implements Cancellable                                                                                                                                                              {
     private boolean cancelled;
 
-    public BlockPistonEvent(Type type, Block block) {
-        super(type, block);
+    public BlockPistonEvent(Block block) {
+        super(block);
     }
 
     public boolean isCancelled() {

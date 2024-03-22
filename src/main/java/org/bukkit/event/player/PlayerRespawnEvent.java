@@ -8,7 +8,7 @@ public class PlayerRespawnEvent extends PlayerEvent {
     private boolean isBedSpawn;
 
     public PlayerRespawnEvent(Player respawnPlayer, Location respawnLocation, boolean isBedSpawn) {
-        super(Type.PLAYER_RESPAWN, respawnPlayer);
+        super(respawnPlayer);
         this.respawnLocation = respawnLocation;
         this.isBedSpawn = isBedSpawn;
     }

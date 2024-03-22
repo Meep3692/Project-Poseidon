@@ -12,7 +12,7 @@ public class EntityCombustEvent extends EntityEvent implements Cancellable {
     private boolean cancel;
 
     public EntityCombustEvent(Entity what) {
-        super(Type.ENTITY_COMBUST, what);
+        super(what);
         this.cancel = false;
     }
 

@@ -13,7 +13,6 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Type;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockFadeEvent;
@@ -25,7 +24,6 @@ import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class CraftEventFactory {
@@ -75,32 +73,33 @@ public class CraftEventFactory {
      * Bucket methods
      */
     public static PlayerBucketEmptyEvent callPlayerBucketEmptyEvent(EntityHuman who, int clickedX, int clickedY, int clickedZ, int clickedFace, ItemStack itemInHand) {
-        return (PlayerBucketEmptyEvent) getPlayerBucketEvent(Type.PLAYER_BUCKET_EMPTY, who, clickedX, clickedY, clickedZ, clickedFace, itemInHand, Item.BUCKET);
-    }
-
-    public static PlayerBucketFillEvent callPlayerBucketFillEvent(EntityHuman who, int clickedX, int clickedY, int clickedZ, int clickedFace, ItemStack itemInHand, net.minecraft.server.Item bucket) {
-        return (PlayerBucketFillEvent) getPlayerBucketEvent(Type.PLAYER_BUCKET_FILL, who, clickedX, clickedY, clickedZ, clickedFace, itemInHand, bucket);
-    }
-
-    private static PlayerEvent getPlayerBucketEvent(Type type, EntityHuman who, int clickedX, int clickedY, int clickedZ, int clickedFace, ItemStack itemstack, net.minecraft.server.Item item) {
         Player player = (who == null) ? null : (Player) who.getBukkitEntity();
-        CraftItemStack itemInHand = new CraftItemStack(new ItemStack(item));
-        Material bucket = Material.getMaterial(itemstack.id);
+        CraftItemStack newItemInHand = new CraftItemStack(new ItemStack(Item.BUCKET));
+        Material bucket = Material.getMaterial(itemInHand.id);
 
         CraftWorld craftWorld = (CraftWorld) player.getWorld();
         CraftServer craftServer = (CraftServer) player.getServer();
 
         Block blockClicked = craftWorld.getBlockAt(clickedX, clickedY, clickedZ);
         BlockFace blockFace = CraftBlock.notchToBlockFace(clickedFace);
+        PlayerBucketEmptyEvent event = new PlayerBucketEmptyEvent(player, blockClicked, blockFace, bucket, newItemInHand);
+        event.setCancelled(!canBuild(craftWorld, player, clickedX, clickedZ));
+        craftServer.getPluginManager().callEvent(event);
+        return event;
+    }
 
-        PlayerEvent event = null;
-        if (type == Type.PLAYER_BUCKET_EMPTY) {
-            event = new PlayerBucketEmptyEvent(player, blockClicked, blockFace, bucket, itemInHand);
-            ((PlayerBucketEmptyEvent) event).setCancelled(!canBuild(craftWorld, player, clickedX, clickedZ));
-        } else if (type == Type.PLAYER_BUCKET_FILL) {
-            event = new PlayerBucketFillEvent(player, blockClicked, blockFace, bucket, itemInHand);
-            ((PlayerBucketFillEvent) event).setCancelled(!canBuild(craftWorld, player, clickedX, clickedZ));
-        }
+    public static PlayerBucketFillEvent callPlayerBucketFillEvent(EntityHuman who, int clickedX, int clickedY, int clickedZ, int clickedFace, ItemStack itemInHand, net.minecraft.server.Item bucket) {
+        Player player = (who == null) ? null : (Player) who.getBukkitEntity();
+        CraftItemStack newItemInHand = new CraftItemStack(new ItemStack(bucket));
+        Material bucketMat = Material.getMaterial(itemInHand.id);
+
+        CraftWorld craftWorld = (CraftWorld) player.getWorld();
+        CraftServer craftServer = (CraftServer) player.getServer();
+
+        Block blockClicked = craftWorld.getBlockAt(clickedX, clickedY, clickedZ);
+        BlockFace blockFace = CraftBlock.notchToBlockFace(clickedFace);
+        PlayerBucketFillEvent event = new PlayerBucketFillEvent(player, blockClicked, blockFace, bucketMat, newItemInHand);
+        event.setCancelled(!canBuild(craftWorld, player, clickedX, clickedZ));
 
         craftServer.getPluginManager().callEvent(event);
 

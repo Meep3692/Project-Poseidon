@@ -14,7 +14,7 @@ public class PigZapEvent extends EntityEvent implements Cancellable {
     private Entity bolt;
 
     public PigZapEvent(Entity pig, Entity bolt, Entity pigzombie) {
-        super(Type.PIG_ZAP, pig);
+        super(pig);
         this.pig = pig;
         this.bolt = bolt;
         this.pigzombie = pigzombie;

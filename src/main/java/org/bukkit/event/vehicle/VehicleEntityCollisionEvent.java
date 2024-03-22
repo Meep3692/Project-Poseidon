@@ -16,7 +16,7 @@ public class VehicleEntityCollisionEvent extends VehicleCollisionEvent implement
     private boolean cancelledCollision = false;
 
     public VehicleEntityCollisionEvent(Vehicle vehicle, Entity entity) {
-        super(Type.VEHICLE_COLLISION_ENTITY, vehicle);
+        super(vehicle);
         this.entity = entity;
     }
 

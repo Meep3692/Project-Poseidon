@@ -9,7 +9,7 @@ public class PlayerJoinEvent extends PlayerEvent {
     private String joinMessage;
 
     public PlayerJoinEvent(Player playerJoined, String joinMessage) {
-        super(Type.PLAYER_JOIN, playerJoined);
+        super(playerJoined);
         this.joinMessage = joinMessage;
     }
 

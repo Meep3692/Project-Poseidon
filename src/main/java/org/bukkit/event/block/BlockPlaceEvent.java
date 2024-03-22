@@ -20,7 +20,7 @@ public class BlockPlaceEvent extends BlockEvent implements Cancellable {
     protected Player player;
 
     public BlockPlaceEvent(Block placedBlock, BlockState replacedBlockState, Block placedAgainst, ItemStack itemInHand, Player thePlayer, boolean canBuild) {
-        super(Type.BLOCK_PLACE, placedBlock);
+        super(placedBlock);
         this.placedAgainst = placedAgainst;
         this.itemInHand = itemInHand;
         this.player = thePlayer;

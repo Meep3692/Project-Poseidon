@@ -18,7 +18,7 @@ public class CreatureSpawnEvent extends EntityEvent implements Cancellable {
     private SpawnReason spawnReason;
 
     public CreatureSpawnEvent(Entity spawnee, CreatureType mobtype, Location loc, SpawnReason spawnReason) {
-        super(Type.CREATURE_SPAWN, spawnee);
+        super(spawnee);
         this.creatureType = mobtype;
         this.location = loc;
         this.spawnReason = spawnReason;

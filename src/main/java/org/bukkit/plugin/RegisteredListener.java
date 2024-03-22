@@ -6,24 +6,19 @@ import org.bukkit.event.Listener;
 /**
  * Stores relevant information for plugin listeners
  */
-public class RegisteredListener {
+public class RegisteredListener implements Comparable<RegisteredListener>{
     private final Listener listener;
     private final Event.Priority priority;
     private final Plugin plugin;
     private final EventExecutor executor;
+    private final Class<? extends Event> type;
 
-    public RegisteredListener(final Listener pluginListener, final EventExecutor eventExecutor, final Event.Priority eventPriority, final Plugin registeredPlugin) {
+    public RegisteredListener(final Listener pluginListener, final EventExecutor eventExecutor, final Event.Priority eventPriority, final Plugin registeredPlugin, final Class<? extends Event> type) {
         listener = pluginListener;
         priority = eventPriority;
         plugin = registeredPlugin;
         executor = eventExecutor;
-    }
-
-    public RegisteredListener(final Listener pluginListener, final Event.Priority eventPriority, final Plugin registeredPlugin, Event.Type type) {
-        listener = pluginListener;
-        priority = eventPriority;
-        plugin = registeredPlugin;
-        executor = registeredPlugin.getPluginLoader().createExecutor(type, pluginListener);
+        this.type = type;
     }
 
     public void registerAll() {
@@ -55,10 +50,29 @@ public class RegisteredListener {
     }
 
     /**
+     * Gets the type of event for this registration
+     * @return Registered Event Type
+     */
+    public Class<? extends Event> getType() {
+        return type;
+    }
+
+    /**
      * Calls the event executor
      * @return Registered Priority
      */
     public void callEvent(Event event) {
         executor.execute(listener, event);
+    }
+
+    @Override
+    public int compareTo(RegisteredListener o) {
+        int result = this.getPriority().compareTo(o.getPriority());
+
+        if ((result == 0) && (this != o)) {
+            result = 1;
+        }
+
+        return result;
     }
 }

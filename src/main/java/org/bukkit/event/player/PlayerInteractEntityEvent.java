@@ -12,7 +12,7 @@ public class PlayerInteractEntityEvent extends PlayerEvent implements Cancellabl
     boolean cancelled = false;
 
     public PlayerInteractEntityEvent(Player who, Entity clickedEntity) {
-        super(Type.PLAYER_INTERACT_ENTITY, who);
+        super(who);
         this.clickedEntity = clickedEntity;
     }
 

@@ -13,7 +13,7 @@ public class PlayerConnectionInitializationEvent extends Event {
 
 
     public PlayerConnectionInitializationEvent(String username, InetAddress ipAddress, LoginProcessHandler loginProcessHandler) {
-        super(Type.Player_Connection_Initialization);
+        super();
         this.username = username;
         this.ipAddress = ipAddress;
         this.loginProcessHandler = loginProcessHandler;

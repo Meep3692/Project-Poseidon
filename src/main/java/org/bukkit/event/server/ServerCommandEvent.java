@@ -10,7 +10,7 @@ public class ServerCommandEvent extends ServerEvent {
     private String command;
     private CommandSender sender;
     public ServerCommandEvent(ConsoleCommandSender console, String message) {
-        super(Type.SERVER_COMMAND);
+        super();
         command = message;
         sender = console;
     }

@@ -21,15 +21,9 @@ public class BlockFormEvent extends BlockEvent implements Cancellable {
     private boolean cancelled;
     private BlockState newState;
 
-    public BlockFormEvent(Block block, BlockState newState) {
-        super(Type.BLOCK_FORM, block);
-        this.block = block;
-        this.newState = newState;
-        this.cancelled = false;
-    }
 
-    public BlockFormEvent(Type type, Block block, BlockState newState) {
-        super(type, block);
+    public BlockFormEvent(Block block, BlockState newState) {
+        super(block);
         this.block = block;
         this.newState = newState;
         this.cancelled = false;

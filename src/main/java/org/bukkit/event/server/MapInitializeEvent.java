@@ -1,6 +1,5 @@
 package org.bukkit.event.server;
 
-import org.bukkit.event.Event;
 import org.bukkit.map.MapView;
 
 /**
@@ -10,7 +9,7 @@ public class MapInitializeEvent extends ServerEvent {
     private final MapView mapView;
     
     public MapInitializeEvent(MapView mapView) {
-        super(Event.Type.MAP_INITIALIZE);
+        super();
         this.mapView = mapView;
     }
     

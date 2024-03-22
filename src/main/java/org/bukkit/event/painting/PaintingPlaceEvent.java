@@ -5,7 +5,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 
 /**
  * Triggered when a painting is created in the world
@@ -19,7 +18,7 @@ public class PaintingPlaceEvent extends PaintingEvent implements Cancellable {
     private BlockFace blockFace;
 
     public PaintingPlaceEvent(final Painting painting, final Player player, Block block, BlockFace blockFace) {
-        super(Event.Type.PAINTING_PLACE, painting);
+        super(painting);
         this.player = player;
         this.block = block;
         this.blockFace = blockFace;

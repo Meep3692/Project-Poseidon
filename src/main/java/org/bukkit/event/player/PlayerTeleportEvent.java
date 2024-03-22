@@ -4,19 +4,14 @@ import net.minecraft.server.EntityPlayer;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 
 /**
  * Holds information for player teleport events
  */
 public class PlayerTeleportEvent extends PlayerMoveEvent {
-    public PlayerTeleportEvent(Player player, Location from, Location to) {
-        super(Type.PLAYER_TELEPORT, player, from, to);
-        blockCrossDimensionDupe(); //Poseidon
-    }
 
-    public PlayerTeleportEvent(final Event.Type type, Player player, Location from, Location to) {
-        super(type, player, from, to);
+    public PlayerTeleportEvent(Player player, Location from, Location to) {
+        super(player, from, to);
         blockCrossDimensionDupe(); //Poseidon
     }
 

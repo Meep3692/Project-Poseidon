@@ -12,7 +12,7 @@ public class VehicleEnterEvent extends VehicleEvent implements Cancellable {
     private Entity entered;
 
     public VehicleEnterEvent(Vehicle vehicle, Entity entered) {
-        super(Type.VEHICLE_ENTER, vehicle);
+        super(vehicle);
         this.entered = entered;
     }
 

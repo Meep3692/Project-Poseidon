@@ -10,7 +10,7 @@ public class PlayerQuitEvent extends PlayerEvent {
     private String quitMessage;
 
     public PlayerQuitEvent(Player who, String quitMessage) {
-        super(Type.PLAYER_QUIT, who);
+        super(who);
         this.quitMessage = quitMessage;
     }
 

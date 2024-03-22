@@ -19,7 +19,7 @@ public class BlockSpreadEvent extends BlockFormEvent {
     private Block source;
 
     public BlockSpreadEvent(Block block, Block source, BlockState newState) {
-        super(Type.BLOCK_SPREAD, block, newState);
+        super(block, newState);
         this.source = source;
     }
 

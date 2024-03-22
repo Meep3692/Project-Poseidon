@@ -16,14 +16,14 @@ public class CreeperPowerEvent extends EntityEvent implements Cancellable {
     private Entity bolt;
 
     public CreeperPowerEvent(Entity creeper, Entity bolt, PowerCause cause) {
-        super(Type.CREEPER_POWER, creeper);
+        super(creeper);
         this.creeper = creeper;
         this.bolt = bolt;
         this.cause = cause;
     }
 
     public CreeperPowerEvent(Entity creeper, PowerCause cause) {
-        super(Type.CREEPER_POWER, creeper);
+        super(creeper);
         this.creeper = creeper;
         this.cause = cause;
         this.bolt = null;

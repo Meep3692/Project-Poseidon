@@ -11,7 +11,7 @@ public class SpawnChangeEvent extends WorldEvent {
     private Location previousLocation;
 
     public SpawnChangeEvent(World world, Location previousLocation) {
-        super(Type.SPAWN_CHANGE, world);
+        super(world);
         this.previousLocation = previousLocation;
     }
 

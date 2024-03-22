@@ -17,7 +17,7 @@ public class PacketReceivedEvent extends Event
     
     public PacketReceivedEvent(Player player, Packet packet)
     {
-        super(Type.PACKET_RECEIVED);
+        super();
         
         this.player = player;
         this.packet = packet;

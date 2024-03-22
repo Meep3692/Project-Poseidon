@@ -12,7 +12,7 @@ public class BlockBurnEvent extends BlockEvent implements Cancellable {
     private boolean cancelled;
 
     public BlockBurnEvent(Block block) {
-        super(Type.BLOCK_BURN, block);
+        super(block);
         this.cancelled = false;
     }
 

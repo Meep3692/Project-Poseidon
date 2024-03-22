@@ -17,7 +17,7 @@ public class BlockCanBuildEvent extends BlockEvent {
     protected int material;
 
     public BlockCanBuildEvent(Block block, int id, boolean canBuild) {
-        super(Type.BLOCK_CANBUILD, block);
+        super(block);
         buildable = canBuild;
         material = id;
     }

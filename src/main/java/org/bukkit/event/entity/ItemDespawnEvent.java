@@ -9,7 +9,7 @@ public class ItemDespawnEvent extends EntityEvent implements Cancellable {
     private Location location;
 
     public ItemDespawnEvent(Entity spawnee, Location loc) {
-        super(Type.ITEM_DESPAWN, spawnee);
+        super(spawnee);
         location = loc;
     }
 

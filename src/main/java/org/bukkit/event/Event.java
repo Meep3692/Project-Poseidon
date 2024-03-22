@@ -1,51 +1,20 @@
 package org.bukkit.event;
 
-import org.bukkit.entity.Projectile;
-
 import java.io.Serializable;
+
+import org.bukkit.entity.Projectile;
+import org.bukkit.generator.BlockPopulator;
 
 /**
  * Represents an event
  */
 public abstract class Event implements Serializable {
-    private final Type type;
-    private final String name;
 
-    protected Event(final Type type) {
-        exAssert(type != null, "type is null");
-        exAssert(type != Type.CUSTOM_EVENT, "use Event(String) to make custom events");
-        this.type = type;
-        this.name = null;
+    protected Event() {
     }
 
-    protected Event(final String name) {
-        exAssert(name != null, "name is null");
-        this.type = Type.CUSTOM_EVENT;
-        this.name = name;
-    }
-
-    /**
-     * Gets the Type of this event
-     *
-     * @return Event type that this object represents
-     */
-    public final Type getType() {
-        return type;
-    }
-
-    private void exAssert(boolean b, String s) {
-        if (!b) {
-            throw new IllegalArgumentException(s);
-        }
-    }
-
-    /**
-     * Gets the event's name. Should only be used if getType() == Type.CUSTOM
-     *
-     * @return Name of this event
-     */
-    public final String getEventName() {
-        return (type != Type.CUSTOM_EVENT) ? type.toString() : name;
+    protected Event(String name){
+        
     }
 
     /**
@@ -138,10 +107,11 @@ public abstract class Event implements Serializable {
     }
 
     /**
-     * Provides a lookup for all core events
+     * Provides a lookup for legacy events
      *
      * @see org.bukkit.event.
      */
+    @Deprecated
     public enum Type {
 
         /**
@@ -843,6 +813,210 @@ public abstract class Event implements Serializable {
          */
         public Category getCategory() {
             return category;
+        }
+
+        public Class<? extends Event> getEventClass(){
+            switch(this){
+                case BLOCK_BREAK:
+                    return org.bukkit.event.block.BlockBreakEvent.class;
+                case BLOCK_BURN:
+                    return org.bukkit.event.block.BlockBurnEvent.class;
+                case BLOCK_CANBUILD:
+                    return org.bukkit.event.block.BlockCanBuildEvent.class;
+                case BLOCK_DAMAGE:
+                    return org.bukkit.event.block.BlockDamageEvent.class;
+                case BLOCK_DISPENSE:
+                    return org.bukkit.event.block.BlockDispenseEvent.class;
+                case BLOCK_FADE:
+                    return org.bukkit.event.block.BlockFadeEvent.class;
+                case BLOCK_FORM:
+                    return org.bukkit.event.block.BlockFormEvent.class;
+                case BLOCK_FROMTO:
+                    return org.bukkit.event.block.BlockFromToEvent.class;
+                case BLOCK_IGNITE:
+                    return org.bukkit.event.block.BlockIgniteEvent.class;
+                case BLOCK_PHYSICS:
+                    return org.bukkit.event.block.BlockPhysicsEvent.class;
+                case BLOCK_PISTON_EXTEND:
+                    return org.bukkit.event.block.BlockPistonExtendEvent.class;
+                case BLOCK_PISTON_RETRACT:
+                    return org.bukkit.event.block.BlockPistonRetractEvent.class;
+                case BLOCK_PLACE:
+                    return org.bukkit.event.block.BlockPlaceEvent.class;
+                case BLOCK_SPREAD:
+                    return org.bukkit.event.block.BlockSpreadEvent.class;
+                case CHUNK_LOAD:
+                    return org.bukkit.event.world.ChunkLoadEvent.class;
+                case CHUNK_POPULATED:
+                    return org.bukkit.event.world.ChunkPopulateEvent.class;
+                case CHUNK_UNLOAD:
+                    return org.bukkit.event.world.ChunkUnloadEvent.class;
+                case CREATURE_SPAWN:
+                    return org.bukkit.event.entity.CreatureSpawnEvent.class;
+                case CREEPER_POWER:
+                    return org.bukkit.event.entity.CreeperPowerEvent.class;
+                case CUSTOM_EVENT:
+                    return org.bukkit.event.Event.class;
+                case ENTITY_COMBUST:
+                    return org.bukkit.event.entity.EntityCombustEvent.class;
+                case ENTITY_DAMAGE:
+                    return org.bukkit.event.entity.EntityDamageEvent.class;
+                case ENTITY_DAMAGE_BY_BLOCK:
+                    return org.bukkit.event.entity.EntityDamageByBlockEvent.class;
+                case ENTITY_DAMAGE_BY_ENTITY:
+                    return org.bukkit.event.entity.EntityDamageByEntityEvent.class;
+                case ENTITY_DEATH:
+                    return org.bukkit.event.entity.EntityDeathEvent.class;
+                case ENTITY_EXPLODE:
+                    return org.bukkit.event.entity.EntityExplodeEvent.class;
+                case ENTITY_INTERACT:
+                    return org.bukkit.event.entity.EntityInteractEvent.class;
+                case ENTITY_PORTAL_ENTER:
+                    return org.bukkit.event.entity.EntityPortalEnterEvent.class;
+                case ENTITY_REGAIN_HEALTH:
+                    return org.bukkit.event.entity.EntityRegainHealthEvent.class;
+                case ENTITY_TAME:
+                    return org.bukkit.event.entity.EntityTameEvent.class;
+                case ENTITY_TARGET:
+                    return org.bukkit.event.entity.EntityTargetEvent.class;
+                case EXPLOSION_PRIME:
+                    return org.bukkit.event.entity.ExplosionPrimeEvent.class;
+                case FURNACE_BURN:
+                    return org.bukkit.event.inventory.FurnaceBurnEvent.class;
+                case FURNACE_SMELT:
+                    return org.bukkit.event.inventory.FurnaceSmeltEvent.class;
+                case INVENTORY_TRANSACTION:
+                    return org.bukkit.event.inventory.InventoryTransactionEvent.class;
+                case ITEM_DESPAWN:
+                    return org.bukkit.event.entity.ItemDespawnEvent.class;
+                case ITEM_SPAWN:
+                    return org.bukkit.event.entity.ItemSpawnEvent.class;
+                case LEAVES_DECAY:
+                    return org.bukkit.event.block.LeavesDecayEvent.class;
+                case LIGHTNING_STRIKE:
+                    return org.bukkit.event.weather.LightningStrikeEvent.class;
+                case MAP_INITIALIZE:
+                    return org.bukkit.event.server.MapInitializeEvent.class;
+                case PACKET_RECEIVED:
+                    return org.bukkit.event.packet.PacketReceivedEvent.class;
+                case PAINTING_BREAK:
+                    return org.bukkit.event.painting.PaintingBreakEvent.class;
+                case PAINTING_PLACE:
+                    return org.bukkit.event.painting.PaintingPlaceEvent.class;
+                case PIG_ZAP:
+                    return org.bukkit.event.entity.PigZapEvent.class;
+                case PLAYER_ANIMATION:
+                    return org.bukkit.event.player.PlayerAnimationEvent.class;
+                case PLAYER_BED_ENTER:
+                    return org.bukkit.event.player.PlayerBedEnterEvent.class;
+                case PLAYER_BED_LEAVE:
+                    return org.bukkit.event.player.PlayerBedLeaveEvent.class;
+                case PLAYER_BUCKET_EMPTY:
+                    return org.bukkit.event.player.PlayerBucketEmptyEvent.class;
+                case PLAYER_BUCKET_FILL:
+                    return org.bukkit.event.player.PlayerBucketFillEvent.class;
+                case PLAYER_CHANGED_WORLD:
+                    return org.bukkit.event.player.PlayerChangedWorldEvent.class;
+                case PLAYER_CHAT:
+                    return org.bukkit.event.player.PlayerChatEvent.class;
+                case PLAYER_COMMAND_PREPROCESS:
+                    return org.bukkit.event.player.PlayerCommandPreprocessEvent.class;
+                case PLAYER_DROP_ITEM:
+                    return org.bukkit.event.player.PlayerDropItemEvent.class;
+                case PLAYER_EGG_THROW:
+                    return org.bukkit.event.player.PlayerEggThrowEvent.class;
+                case PLAYER_FISH:
+                    return org.bukkit.event.player.PlayerFishEvent.class;
+                case PLAYER_INTERACT:
+                    return org.bukkit.event.player.PlayerInteractEvent.class;
+                case PLAYER_INTERACT_ENTITY:
+                    return org.bukkit.event.player.PlayerInteractEntityEvent.class;
+                case PLAYER_INVENTORY:
+                    return org.bukkit.event.player.PlayerInventoryEvent.class;
+                case PLAYER_ITEM_DAMAGE:
+                    return org.bukkit.event.player.PlayerItemDamageEvent.class;
+                case PLAYER_ITEM_HELD:
+                    return org.bukkit.event.player.PlayerItemHeldEvent.class;
+                case PLAYER_JOIN:
+                    return org.bukkit.event.player.PlayerJoinEvent.class;
+                case PLAYER_KICK:
+                    return org.bukkit.event.player.PlayerKickEvent.class;
+                case PLAYER_LOGIN:
+                    return org.bukkit.event.player.PlayerLoginEvent.class;
+                case PLAYER_MOVE:
+                    return org.bukkit.event.player.PlayerMoveEvent.class;
+                case PLAYER_PICKUP_ITEM:
+                    return org.bukkit.event.player.PlayerPickupItemEvent.class;
+                case PLAYER_PORTAL:
+                    return org.bukkit.event.player.PlayerPortalEvent.class;
+                case PLAYER_PRELOGIN:
+                    return org.bukkit.event.player.PlayerPreLoginEvent.class;
+                case PLAYER_QUIT:
+                    return org.bukkit.event.player.PlayerQuitEvent.class;
+                case PLAYER_RECEIVE_PACKET:
+                    return com.legacyminecraft.poseidon.event.PlayerReceivePacketEvent.class;
+                case PLAYER_RESPAWN:
+                    return org.bukkit.event.player.PlayerRespawnEvent.class;
+                case PLAYER_SEND_PACKET:
+                    return com.legacyminecraft.poseidon.event.PlayerSendPacketEvent.class;
+                case PLAYER_TELEPORT:
+                    return org.bukkit.event.player.PlayerTeleportEvent.class;
+                case PLAYER_TOGGLE_SNEAK:
+                    return org.bukkit.event.player.PlayerToggleSneakEvent.class;
+                case PLAYER_VELOCITY:
+                    return org.bukkit.event.player.PlayerVelocityEvent.class;
+                case PLUGIN_DISABLE:
+                    return org.bukkit.event.server.PluginDisableEvent.class;
+                case PLUGIN_ENABLE:
+                    return org.bukkit.event.server.PluginEnableEvent.class;
+                case PORTAL_CREATE:
+                    return org.bukkit.event.world.PortalCreateEvent.class;
+                case PROJECTILE_HIT:
+                    return org.bukkit.event.entity.ProjectileHitEvent.class;
+                case Player_Connection_Initialization:
+                    return org.bukkit.event.player.PlayerConnectionInitializationEvent.class;
+                case REDSTONE_CHANGE:
+                    return org.bukkit.event.block.BlockRedstoneEvent.class;
+                case SERVER_COMMAND:
+                    return org.bukkit.event.server.ServerCommandEvent.class;
+                case SIGN_CHANGE:
+                    return org.bukkit.event.block.SignChangeEvent.class;
+                case SPAWN_CHANGE:
+                    return org.bukkit.event.world.SpawnChangeEvent.class;
+                case THUNDER_CHANGE:
+                    return org.bukkit.event.weather.ThunderChangeEvent.class;
+                case VEHICLE_COLLISION_BLOCK:
+                    return org.bukkit.event.vehicle.VehicleBlockCollisionEvent.class;
+                case VEHICLE_COLLISION_ENTITY:
+                    return org.bukkit.event.vehicle.VehicleEntityCollisionEvent.class;
+                case VEHICLE_CREATE:
+                    return org.bukkit.event.vehicle.VehicleCreateEvent.class;
+                case VEHICLE_DAMAGE:
+                    return org.bukkit.event.vehicle.VehicleDamageEvent.class;
+                case VEHICLE_DESTROY:
+                    return org.bukkit.event.vehicle.VehicleDestroyEvent.class;
+                case VEHICLE_ENTER:
+                    return org.bukkit.event.vehicle.VehicleEnterEvent.class;
+                case VEHICLE_EXIT:
+                    return org.bukkit.event.vehicle.VehicleExitEvent.class;
+                case VEHICLE_MOVE:
+                    return org.bukkit.event.vehicle.VehicleMoveEvent.class;
+                case VEHICLE_UPDATE:
+                    return org.bukkit.event.vehicle.VehicleUpdateEvent.class;
+                case WEATHER_CHANGE:
+                    return org.bukkit.event.weather.WeatherChangeEvent.class;
+                case WORLD_INIT:
+                    return org.bukkit.event.world.WorldInitEvent.class;
+                case WORLD_LOAD:
+                    return org.bukkit.event.world.WorldLoadEvent.class;
+                case WORLD_SAVE:
+                    return org.bukkit.event.world.WorldSaveEvent.class;
+                case WORLD_UNLOAD:
+                    return org.bukkit.event.world.WorldUnloadEvent.class;
+                default:
+                    throw new IllegalArgumentException("Unable to convert legacy Event.Type to event class: " + this);
+
+            }
         }
     }
 

@@ -2,13 +2,13 @@ package org.bukkit.plugin;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MapMaker;
-import com.legacyminecraft.poseidon.event.PoseidonCustomListener;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommandYamlParser;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
 import org.bukkit.event.Listener;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
@@ -17,6 +17,8 @@ import org.bukkit.util.FileUtil;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
@@ -30,24 +32,13 @@ public final class SimplePluginManager implements PluginManager {
     private final Map<Pattern, PluginLoader> fileAssociations = new HashMap<Pattern, PluginLoader>();
     private final List<Plugin> plugins = new ArrayList<Plugin>();
     private final Map<String, Plugin> lookupNames = new HashMap<String, Plugin>();
-    private final Map<Event.Type, SortedSet<RegisteredListener>> listeners = new EnumMap<Event.Type, SortedSet<RegisteredListener>>(Event.Type.class);
+    private final SortedSet<RegisteredListener> listeners = new TreeSet<>();
     private static File updateDirectory = null;
     private final SimpleCommandMap commandMap;
     private final Map<String, Permission> permissions = new HashMap<String, Permission>();
     private final Map<Boolean, Set<Permission>> defaultPerms = new LinkedHashMap<Boolean, Set<Permission>>();
     private final Map<String, Map<Permissible, Boolean>> permSubs = new HashMap<String, Map<Permissible, Boolean>>();
     private final Map<Boolean, Map<Permissible, Boolean>> defSubs = new HashMap<Boolean, Map<Permissible, Boolean>>();
-    private final Comparator<RegisteredListener> comparer = new Comparator<RegisteredListener>() {
-        public int compare(RegisteredListener i, RegisteredListener j) {
-            int result = i.getPriority().compareTo(j.getPriority());
-
-            if ((result == 0) && (i != j)) {
-                result = 1;
-            }
-
-            return result;
-        }
-    };
 
     public SimplePluginManager(Server instance, SimpleCommandMap commandMap) {
         server = instance;
@@ -64,26 +55,37 @@ public final class SimplePluginManager implements PluginManager {
         if (!plugin.isEnabled()) {
             throw new IllegalPluginAccessException("Plugin attempted to register " + listener + " while not enabled");
         } else {
-            for (Map.Entry<Class<? extends Event>, Set<RegisteredListener>> entry : plugin.getPluginLoader().createRegisteredListeners(listener, plugin).entrySet()) {
-                Class<? extends Event> clazz = entry.getKey();
-                Event.Type type = Event.Type.getTypeByName(clazz.getSimpleName().substring(0, clazz.getSimpleName().indexOf("Event")));
-                if (type != null) {
-                    getEventListeners(type).addAll(entry.getValue());
-                } else {
-                    //If listener implements PoseidonCustomListener, we can be sure it is probably a custom event.
-                    if (listener instanceof PoseidonCustomListener) {
-                        server.getLogger().log(Level.INFO, plugin.getDescription().getName() + " is utilizing event handlers to receive the custom event " + clazz.getSimpleName() + ". Please be aware this is a hacky beta feature.");
-                        getEventListeners(Event.Type.CUSTOM_EVENT).addAll(entry.getValue());
-                    } else {
-                        String cName = clazz.getName();
-                        server.getLogger().log(Level.SEVERE, String.format("Class %s failed to get Event.Type on @EventHandler", cName));
-                    }
-                }
-
-            }
-
+            listeners.addAll(plugin.getPluginLoader().createRegisteredListeners(listener, plugin));
         }
     }
+
+    @Override
+    @Deprecated
+    public void registerEvent(Type type, Listener listener, Priority priority, Plugin plugin) {
+        Method[] methods = listener.getClass().getMethods();
+        Class<? extends Event> eventClass = type.getEventClass();
+        for(Method method : methods){
+            Class<?>[] params = method.getParameterTypes();
+            if(params.length == 1 && eventClass.equals(method.getParameterTypes()[0])){
+                final EventExecutor executor = (listener1, event) -> {
+                    try {
+                        method.invoke(listener1, event);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                };
+                RegisteredListener registeredListener = new RegisteredListener(listener, executor, priority, plugin, eventClass);
+                listeners.add(registeredListener);
+            }
+        }
+    }
+
+    @Override
+    @Deprecated
+    public void registerEvent(Type type, Listener listener, EventExecutor executor, Priority priority, Plugin plugin) {
+        listeners.add(new RegisteredListener(listener, executor, priority, plugin, type.getEventClass()));
+    }
+
     // Project Poseidon End
 
     /**
@@ -353,86 +355,34 @@ public final class SimplePluginManager implements PluginManager {
      * @param event Event details
      */
     public synchronized void callEvent(Event event) {
-        SortedSet<RegisteredListener> eventListeners = listeners.get(event.getType());
 
-        if (eventListeners != null) {
-            for (RegisteredListener registration : eventListeners) {
-                try {
+        for (RegisteredListener registration : listeners) {
+            try {
+                if(registration.getType().isAssignableFrom(event.getClass())){
                     registration.callEvent(event);
-                } catch (AuthorNagException ex) {
-                    Plugin plugin = registration.getPlugin();
-
-                    if (plugin.isNaggable()) {
-                        plugin.setNaggable(false);
-
-                        String author = "<NoAuthorGiven>";
-
-                        if (plugin.getDescription().getAuthors().size() > 0) {
-                            author = plugin.getDescription().getAuthors().get(0);
-                        }
-                        server.getLogger().log(Level.SEVERE, String.format(
-                            "Nag author: '%s' of '%s' about the following: %s",
-                            author,
-                            plugin.getDescription().getName(),
-                            ex.getMessage()
-                        ));
-                    }
-                } catch (Throwable ex) {
-                    server.getLogger().log(Level.SEVERE, "Could not pass event " + event.getType() + " to " + registration.getPlugin().getDescription().getName(), ex);
                 }
+            } catch (AuthorNagException ex) {
+                Plugin plugin = registration.getPlugin();
+
+                if (plugin.isNaggable()) {
+                    plugin.setNaggable(false);
+
+                    String author = "<NoAuthorGiven>";
+
+                    if (plugin.getDescription().getAuthors().size() > 0) {
+                        author = plugin.getDescription().getAuthors().get(0);
+                    }
+                    server.getLogger().log(Level.SEVERE, String.format(
+                        "Nag author: '%s' of '%s' about the following: %s",
+                        author,
+                        plugin.getDescription().getName(),
+                        ex.getMessage()
+                    ));
+                }
+            } catch (Throwable ex) {
+                server.getLogger().log(Level.SEVERE, "Could not pass event " + event.getClass().getSimpleName() + " to " + registration.getPlugin().getDescription().getName(), ex);
             }
         }
-    }
-
-    /**
-     * Registers the given event to the specified listener
-     *
-     * @param type EventType to register
-     * @param listener PlayerListener to register
-     * @param priority Priority of this event
-     * @param plugin Plugin to register
-     */
-    public void registerEvent(Event.Type type, Listener listener, Priority priority, Plugin plugin) {
-        if (!plugin.isEnabled()) {
-            throw new IllegalPluginAccessException("Plugin attempted to register " + type + " while not enabled");
-        }
-
-        getEventListeners(type).add(new RegisteredListener(listener, priority, plugin, type));
-    }
-
-    /**
-     * Registers the given event to the specified listener using a directly passed EventExecutor
-     *
-     * @param type EventType to register
-     * @param listener PlayerListener to register
-     * @param executor EventExecutor to register
-     * @param priority Priority of this event
-     * @param plugin Plugin to register
-     */
-    public void registerEvent(Event.Type type, Listener listener, EventExecutor executor, Priority priority, Plugin plugin) {
-        if (!plugin.isEnabled()) {
-            throw new IllegalPluginAccessException("Plugin attempted to register " + type + " while not enabled");
-        }
-
-        getEventListeners(type).add(new RegisteredListener(listener, executor, priority, plugin));
-    }
-
-    /**
-     * Returns a SortedSet of RegisteredListener for the specified event type creating a new queue if needed
-     *
-     * @param type EventType to lookup
-     * @return SortedSet<RegisteredListener> the looked up or create queue matching the requested type
-     */
-    private SortedSet<RegisteredListener> getEventListeners(Event.Type type) {
-        SortedSet<RegisteredListener> eventListeners = listeners.get(type);
-
-        if (eventListeners != null) {
-            return eventListeners;
-        }
-
-        eventListeners = new TreeSet<RegisteredListener>(comparer);
-        listeners.put(type, eventListeners);
-        return eventListeners;
     }
 
     public Permission getPermission(String name) {

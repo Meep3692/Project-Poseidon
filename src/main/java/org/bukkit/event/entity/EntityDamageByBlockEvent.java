@@ -12,7 +12,7 @@ public class EntityDamageByBlockEvent extends EntityDamageEvent implements Cance
     private Block damager;
 
     public EntityDamageByBlockEvent(Block damager, Entity damagee, DamageCause cause, int damage) {
-        super(Type.ENTITY_DAMAGE, damagee, cause, damage);
+        super(damagee, cause, damage);
         this.damager = damager;
     }
 

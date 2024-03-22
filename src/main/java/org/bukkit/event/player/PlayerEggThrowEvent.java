@@ -14,7 +14,7 @@ public class PlayerEggThrowEvent extends PlayerEvent {
     private byte numHatches;
 
     public PlayerEggThrowEvent(Player player, Egg egg, boolean hatching, byte numHatches, CreatureType hatchType) {
-        super(Type.PLAYER_EGG_THROW, player);
+        super(player);
         this.egg = egg;
         this.hatching = hatching;
         this.numHatches = numHatches;

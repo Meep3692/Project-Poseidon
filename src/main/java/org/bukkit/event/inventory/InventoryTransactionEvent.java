@@ -16,7 +16,7 @@ public class InventoryTransactionEvent extends Event implements Cancellable
     
     public InventoryTransactionEvent(InventoryTransactionType transactionType, Inventory inventory, ItemStack stack)
     {
-        super(Type.INVENTORY_TRANSACTION);
+        super();
         
         this.transactionType = transactionType;
         this.inventory = inventory;
